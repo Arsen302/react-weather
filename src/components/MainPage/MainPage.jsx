@@ -1,52 +1,62 @@
-import React from "react";
-import styles from "./MainPage.module.css";
-import Card from "../СardPage/СardPage";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDespatch } from "react-redux";
+import axios from "axios";
 
-const MainScreen = ({ title, content }) => {
-  const cardData = [
-    {
-      title: "Kharkiv",
-      content: "Lorem ipsum dolor, sit amet consectetur adipisicing elit.",
-    },
-    {
-      title: "New - York",
-      content: "Lorem ipsum dolor, sit amet consectetur adipisicing elit.",
-    },
-    {
-      title: "Tokyo",
-      content: "Lorem ipsum dolor, sit amet consectetur adipisicing elit.",
-    },
-    {
-      title: "Kyiv",
-      content: "Lorem ipsum dolor, sit amet consectetur adipisicing elit.",
-    },
-    {
-      title: "Lviv",
-      content: "Lorem ipsum dolor, sit amet consectetur adipisicing elit.",
-    },
-    {
-      title: "Moscow",
-      content: "Lorem ipsum dolor, sit amet consectetur adipisicing elit.",
-    },
-  ];
+import styles from "./MainPage.module.css";
+
+import Context from "../Context";
+import Card from "../СardPage/СardPage";
+import SearchWeather from "./SearchWeather/SearchWeather";
+import WeatherData from "./WeatherData/WeatherData";
+
+const APP_KEY = "5a7f693e024afca9ebf76742e0b28dad";
+// `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${APP_KEY}&units=metric`;
+
+const MainPage = () => {
+  const [weather, setWeather] = useState();
+  const [city, setCity] = useState();
+  const [country, setCountry] = useState();
+  const [error, setError] = useState();
+
+  const api_req = async (e) => {
+    e.preventDefault();
+    const location = e.target.elements.city.value;
+    if (!location) return setError("Введите название города"), setWeather(null);
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${APP_KEY}&units=metric`;
+    const req = axios.get(url);
+    const res = await req;
+    setWeather(res.data.main.temp);
+    setCity(res.data.name);
+    setCountry(res.data.sys.country);
+
+    console.log(res);
+  };
 
   return (
     <div className={styles.container}>
       <div className={styles.wrapper}>
-        <header className={styles.header}>
-          <nav className={styles.navbar}>
-            <label />
-            <input type="text" className={styles.search} placeholder="Search" />
-          </nav>
-        </header>
-        <main className={styles.content}>
-          <div>
-            <Card cards={cardData} />
-          </div>
-        </main>
+        <Context.Provider
+          value={{
+            api_req,
+            weather,
+            city,
+            country,
+          }}
+        >
+          <SearchWeather />
+          {weather && <WeatherData />}
+        </Context.Provider>
+        <div className={styles.content}>
+          <Card title="Kharkiv" content="+9" />
+          <Card title="Tokyo" content="+12" />
+          <Card title="Moscow" content="+3" />
+          <Card title="Kiev" content="+10" />
+          <Card title="Lviv" content="+15" />
+          <Card title="New-York" content="+18" />
+        </div>
       </div>
     </div>
   );
 };
 
-export default MainScreen;
+export default MainPage;
