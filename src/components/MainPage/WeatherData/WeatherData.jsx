@@ -9,9 +9,10 @@ const WeatherData = () => {
     <div className={styles.container}>
       <div className={styles.wrapper}>
         <p className={styles.content_city}>
-          {city}, {country},
+          {city}, {country}, {weather} °С
         </p>
-        <p className={styles.content_weather}>{weather} °С</p>
+        {/* подумать как красиво перенести погоду на другую строку */}
+        <p className={styles.content_weather}></p>
       </div>
     </div>
   );
