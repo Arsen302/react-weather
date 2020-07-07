@@ -10,7 +10,6 @@
 
 # production
 /build
-bootstrap-4.5.0-examples
 
 # misc
 .DS_Store

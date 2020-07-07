@@ -1,9 +1,12 @@
 import React, { useContext } from "react";
 import Context from "../../Context";
+
+import Add from "../../СardPage/Buttons/Add";
+
 import styles from "../WeatherData/WeatherData.module.css";
 
 const WeatherData = () => {
-  const { weather, city, country } = useContext(Context);
+  const { weather, city, country, error } = useContext(Context);
 
   return (
     <div className={styles.container}>
@@ -11,8 +14,7 @@ const WeatherData = () => {
         <p className={styles.content_city}>
           {city}, {country}, {weather} °С
         </p>
-        {/* подумать как красиво перенести погоду на другую строку */}
-        <p className={styles.content_weather}></p>
+        <Add />
       </div>
     </div>
   );
